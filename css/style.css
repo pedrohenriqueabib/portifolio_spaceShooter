@@ -7,12 +7,35 @@
 .main-play-area{
     background-color: black;
     background-image: url('../img/space.png');
-    height: 730px;
+    height: 707px;
     width: 100%;
     display: flex;
     flex-direction: row;
 }
 
+.pontuacao{
+    font-size: 20px;
+    height: 23px;
+    background-color: darkslategray;
+    color: white;
+    display: flex;
+    justify-content: flex-end;
+}
+
+
+.instrucao{
+    color: white;
+    position: absolute;
+    top: 130px;
+    left: 30%;
+}
+
+.instrucao p{
+    display: flex;
+    width: 60%;
+    font-size: 5vh;
+    text-align: justify;
+}
 
 .start{
     color: white;
@@ -44,7 +67,6 @@
     position: absolute;
     height: 60px;
     width: 70px;
-    /* border: 1px solid red; */
     right: 0;
 } 
 
@@ -54,64 +76,3 @@
     width: 70px;
     right: 0;
 }
-
-.alien-transition {
-    opacity: 1;
-    transition: opacity 1.5s ease-in-out;
-}
-/* .alien-transition {
-    opacity: 1;
-    transition: opacity 1.5s ease-in-out;
-} */
-/* 
-body{
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: sans-serif;
-    background-color: cornflowerblue;
-}
-
-.main-play-area{
-    background-color: black;
-    background-image: url('../img/space.png');
-    height: 600px;
-    width: 600px;
-    display: flex;
-    flex-direction: row;
-}
-
-.start{
-    color: white;
-    font-family: 'Courier New', Courier, monospace;
-    position: relative;
-    margin: auto;
-    border: 1px solid black;
-    padding: 5px;
-    background-color: black;
-    cursor: pointer;
-}
-
-#player-shooter{
-    position: relative;
-    height: 60px;
-    width: 70px;
-    left: 20px;
-    top: 250px;
-    display: none;
-}
-
-.shoot{
-    position: relative;
-    width: 40px;
-    height: 30px;
-}
-
-.inimigo{
-    position: relative;
-    height: 60px;
-    width: 70px;
-    border: 1px solid red;
-} */

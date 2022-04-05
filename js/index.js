@@ -2,26 +2,31 @@ const yourShip = document.querySelector('#player-shooter');
 const playArea = document.querySelector('.main-play-area');
 const start = document.querySelector('.start');
 const tiro = document.querySelector('.tiro');
+const instrucao = document.querySelector('.instrucao');
 let up = 300;
 let disparo = 0;
 let comecou = false;
 let moverProjetil;
 let criarInimigo, moverInimigo, confirmarColisao;
-
+let pontos = document.querySelector('.pontos');
+let totalPontos = 0;
 
 start.addEventListener('click', ()=>{
     start.style.display = 'none';
     yourShip.style.display = 'block';
+    instrucao.style.display = 'none';
+
     comecou = true;
     enemy();
     moverInimigo = setInterval(()=>{
         moveEnemy();
         collision();
     }, 5);
+    pontos.innerHTML = totalPontos;
 })
 
 document.addEventListener('keydown', (e)=>{
-    if( e.key === 'ArrowUp' && up > 0){
+    if( e.key === 'ArrowUp' && up > 25){
         up -= 10;
         yourShip.style.top = `${up}px`;
     }
@@ -29,8 +34,8 @@ document.addEventListener('keydown', (e)=>{
         up += 10;
         yourShip.style.top = `${up}px`;
     }
-    if( e.key === ' ' && disparo == 0 && comecou === true){
-        disparo = 1;
+    if( e.key === ' ' && disparo >= 0 && disparo <= 2 && comecou === true){
+        disparo++;
         shoot(up);
     }
 })
@@ -43,26 +48,30 @@ function shoot(up){
     projetil.style.top = up+'px';
     projetil.style.left = '100px';
     playArea.appendChild(projetil);
-    moveShoot(projetil);
+    let totalShoot = document.querySelectorAll('.shoot');
+    moveShoot(totalShoot);
 }
 
 // mover shoot
-function moveShoot(projetil){
+function moveShoot(projeteis){
     moverProjetil = setInterval(()=>{
-        let trajeto = parseInt(projetil.style.left) + 10; 
-        projetil.style.left = `${trajeto}px`;
-        if( trajeto === 1400){
-            projetil.remove();
-            disparo = 0;
-            clearInterval(moverProjetil);
-        }
+        projeteis.forEach((obj)=>{
+            let trajeto = parseInt(obj.style.left) + 10; 
+            obj.style.left = `${trajeto}px`;
+            if( trajeto === 1400){
+                obj.remove();
+                if( disparo > 0)
+                    disparo--;
+                // clearInterval(moverProjetil);
+            }
+        })
     }, 10);
 }
 
 // criar inimigo
 function enemy(){
     criarInimigo = setInterval(()=>{
-        let altura = (Math.random() * (650 - 10) + 10).toFixed();
+        let altura = (Math.random() * (650 - 30) + 30).toFixed();
         let inimigo = document.createElement('img');
         let kind = Math.random() * (3-1)+1;
         inimigo.src = `../img/monster-${kind.toFixed()}.png`;
@@ -84,7 +93,7 @@ function moveEnemy(){
                 clearInterval(moverProjetil);
                 clearInterval(criarInimigo);
                 clearInterval(moverInimigo);
-                alert(' Você perdeu');
+                alert(' Você perdeu :-(  total de pontos: '+totalPontos);
                 location.reload();
             }
         })
@@ -94,24 +103,30 @@ function moveEnemy(){
 //colisao
 function collision(){
     let inimigo = document.querySelectorAll('.inimigo');
-    let rajada = document.querySelector('.shoot');
+    let rajada = document.querySelectorAll('.shoot');
     let deadTime = 0;
     if( inimigo && rajada){
-        inimigo.forEach( (alien)=>{
-            let posicaoRajada = parseInt(rajada.style.left);
-            let posicaoAlien = parseInt( alien.style.left);
-            let alturaAlien = parseInt( alien.style.top);
-            let alturaRajada = parseInt( rajada.style.top);
-            if( posicaoRajada >= posicaoAlien){// alturaRajada <= alturaAlien && alturaRajada >= alturaAlien){
-                if(alturaRajada >= alturaAlien - 25 && alturaRajada <= alturaAlien + 25 ){
-                    alien.src = '../img/explosion.png';
-                    alien.classList.remove('inimigo');
-                    alien.classList.add('dead');
-                    setTimeout(()=>{
-                        alien.remove();
-                    }, 1000);
-                }                    
-            }
+        rajada.forEach((obj)=>{
+            inimigo.forEach( (alien)=>{
+                let posicaoRajada = parseInt(obj.style.left);
+                let posicaoAlien = parseInt( alien.style.left);
+                let alturaAlien = parseInt( alien.style.top);
+                let alturaRajada = parseInt( obj.style.top);
+                if( posicaoRajada >= posicaoAlien){
+                    if(alturaRajada >= alturaAlien - 25 && alturaRajada <= alturaAlien + 25 ){
+                        alien.src = '../img/explosion.png';
+                        alien.classList.remove('inimigo');
+                        alien.classList.add('dead');
+                        totalPontos += 100;
+                        pontos.innerHTML = totalPontos; 
+                        setTimeout(()=>{
+                            alien.remove();
+                        }, 1000);
+                    }                    
+                }
+            })
+
         })
+        
     }
 }
