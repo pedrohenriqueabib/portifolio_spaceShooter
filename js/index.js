@@ -10,6 +10,8 @@ let moverProjetil;
 let criarInimigo, moverInimigo, confirmarColisao;
 let pontos = document.querySelector('.pontos');
 let totalPontos = 0;
+let moving = false;
+let shooting = false;
 
 start.addEventListener('click', ()=>{
     start.style.display = 'none';
@@ -23,33 +25,100 @@ start.addEventListener('click', ()=>{
         collision();
     }, 5);
     pontos.innerHTML = totalPontos;
+    teclas();
+    verificarTiros();
 })
 
+// document.addEventListener('keydown', (e)=>{
+//     if( e.key === 'ArrowUp' && up > 25){
+//         up -= 10;
+//         yourShip.style.top = `${up}px`;
+//     }
+    
+//     if( e.key === 'ArrowDown' && up < 670){
+//         up += 10;
+//         yourShip.style.top = `${up}px`;
+//     }
+
+//     if( e.key === ' ' && disparo >= 0 && disparo <= 2 && comecou === true){
+//         disparo++;
+//         shoot(up);
+//     }
+// })
+
+
 document.addEventListener('keydown', (e)=>{
-    if( e.key === 'ArrowUp' && up > 25){
+    if( e.key == 'ArrowUp'){
+       moving = e.key;
+    }
+
+    if( e.key == 'ArrowDown'){
+        moving = e.key;
+    }
+
+    if( e.key == ' '){
+        shooting = true;
+    }
+})
+
+document.addEventListener('keyup', (e)=>{
+    if( e.key == 'ArrowUp'){
+        moving = false;
+    }
+
+    if( e.key == 'ArrowDown'){
+         moving = false;
+    }
+
+    if( e.key == ' '){
+         shooting = false;
+    }
+})
+
+function teclas(){
+    let conferir = setInterval(()=>{
+        if( moving != false){
+            moveShip(moving);
+        }
+    }, 20)
+}
+
+function verificarTiros(){
+    let atirando = setInterval(()=>{
+        if( shooting == true){
+            shoot(up);
+        }
+
+    }, 200);
+}
+
+function moveShip(key){    
+    moving = key;
+    if( key === 'ArrowUp' && up > 25){
         up -= 10;
         yourShip.style.top = `${up}px`;
     }
-    if( e.key === 'ArrowDown' && up < 670){
+    
+    if( key === 'ArrowDown' && up < 670){
         up += 10;
         yourShip.style.top = `${up}px`;
     }
-    if( e.key === ' ' && disparo >= 0 && disparo <= 2 && comecou === true){
-        disparo++;
-        shoot(up);
-    }
-})
+}
 
 //criar shoot
 function shoot(up){
-    let projetil = document.createElement('img');
-    projetil.src = '../img/shoot.png';
-    projetil.classList.add('shoot');
-    projetil.style.top = up+'px';
-    projetil.style.left = '100px';
-    playArea.appendChild(projetil);
-    let totalShoot = document.querySelectorAll('.shoot');
-    moveShoot(totalShoot);
+    if( disparo >= 0 && disparo <= 2 && comecou === true){
+        shooting = true;
+        disparo++;
+        let projetil = document.createElement('img');
+        projetil.src = '../img/shoot.png';
+        projetil.classList.add('shoot');
+        projetil.style.top = up+'px';
+        projetil.style.left = '100px';
+        playArea.appendChild(projetil);
+        let totalShoot = document.querySelectorAll('.shoot');
+        moveShoot(totalShoot);
+    }
 }
 
 // mover shoot
